@@ -1,0 +1,50 @@
+---
+# tasks file for imagemagick
+
+- name: Remove apt package
+  become: yes
+  apt:
+    pkg: imagemagick
+    state: absent
+
+- name: Check imagemagick is installed
+  become: yes
+  stat:
+    path: "{{ imagemagick_install_dest }}/{{ imagemagick_command_name }}"
+  register: cmd
+
+- block:
+    - name: Install the build dependencies
+      become: yes
+      apt:
+        pkg: imagemagick
+        state: build-dep
+
+    - name: install dependencies packages
+      become: yes
+      apt:
+        pkg: "{{ item }}"
+        update_cache: yes
+      with_items: "{{ imagemagick_dependencies }}"
+
+    - name: Download source code
+      become: yes
+      unarchive:
+        src: "{{ imagemagick_download_url }}"
+        dest: "{{ imagemagick_download_dest }}"
+        remote_src: true
+        creates: ImageMagick
+
+    - name: configure,build,install and check
+      become: yes
+      command: "{{ item }}"
+      args:
+        chdir: "{{ imagemagick_download_dest }}/{{ imagemagick_dirname }}"
+      with_items:
+        - ./configure
+        - make
+        - make install
+        - "ldconfig {{ imagemagick_ldconfig_path }}"
+        # - make check
+
+  when: not cmd.stat.exists
