@@ -14,11 +14,12 @@
   register: cmd
 
 - block:
-    - name: Install the build dependencies
+    - name: Add repository
       become: yes
-      apt:
-        pkg: imagemagick
-        state: build-dep
+      apt_repository:
+        filename: imagemagick.list
+        repo: deb-src http://jp.archive.ubuntu.com/ubuntu/ xenial main restricted
+        state: present
 
     - name: install dependencies packages
       become: yes
@@ -26,6 +27,13 @@
         pkg: "{{ item }}"
         update_cache: yes
       with_items: "{{ imagemagick_dependencies }}"
+
+    - name: Install the build dependencies
+      become: yes
+      apt:
+        pkg: imagemagick
+        state: build-dep
+        update_cache: yes
 
     - name: Download source code
       become: yes
