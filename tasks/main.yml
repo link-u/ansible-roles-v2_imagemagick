@@ -21,12 +21,26 @@
         repo: deb-src http://jp.archive.ubuntu.com/ubuntu/ xenial main restricted
         state: present
 
-    - name: install dependencies packages
+    - name: Install dependencies packages
       become: yes
       apt:
         pkg: "{{ item }}"
         update_cache: yes
       with_items: "{{ imagemagick_dependencies }}"
+
+    - block:
+        - name: Download WebP
+          become: yes
+          unarchive:
+            src: "{{ imagemagick_webp_download_url }}"
+            dest: "{{ imagemagick_webp_download_dest }}"
+            remote_src: true
+
+        - name: Install WebP
+          become: yes
+          shell: "creates={{ imagemagick_webp_download_dest }}/{{ imagemagick_webp_dirname }}/lib/{{ item }} cp -rf {{ imagemagick_webp_download_dest }}/{{ imagemagick_webp_dirname }}/lib/{{ item }} {{ imagemagick_webp_install_dest }}/lib/{{ item }}"
+          with_items: "{{ imagemagick_webp_libs }}"
+      when: imagemagick_webp_install
 
     - name: Install the build dependencies
       become: yes
