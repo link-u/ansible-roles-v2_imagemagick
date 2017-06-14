@@ -1,7 +1,7 @@
 ---
 # defaults file for imagemagick
 
-imagemagick_version: 7.0.6-0
+imagemagick_version: 7.0.4-2
 imagemagick_command_name: convert
 imagemagick_dirname: "ImageMagick-{{ imagemagick_version }}"
 imagemagick_download_url: "https://www.imagemagick.org/download/{{ imagemagick_dirname }}.tar.gz"
@@ -9,20 +9,9 @@ imagemagick_dependencies:
   - libpng-dev
   - libjpeg-dev
   - libtiff-dev
+  - libwebp-dev
 
 imagemagick_prefix: /usr/local
 imagemagick_download_dest: "{{ imagemagick_prefix }}/src"
 imagemagick_install_dest: "{{ imagemagick_prefix }}/bin"
 imagemagick_ldconfig_path: "{{ imagemagick_prefix }}/lib"
-
-imagemagick_webp_install: yes
-imagemagick_webp_version: 0.6.0
-imagemagick_webp_platform: linux-x86-64
-imagemagick_webp_dirname: libwebp-{{ imagemagick_webp_version }}-{{ imagemagick_webp_platform }}
-imagemagick_webp_download_url: https://storage.googleapis.com/downloads.webmproject.org/releases/webp/{{ imagemagick_webp_dirname }}.tar.gz
-imagemagick_webp_download_dest: "{{ imagemagick_prefix }}/src"
-imagemagick_webp_install_dest: "{{ imagemagick_prefix }}"
-imagemagick_webp_libs:
-  - libwebp.a
-  - libwebpdemux.a
-  - libwebpmux.a
