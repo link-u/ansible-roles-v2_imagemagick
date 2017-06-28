@@ -43,11 +43,18 @@
         remote_src: true
         creates: ImageMagick
 
+    - name: Register latest dirname variable
+      become: yes
+      command: bash -c "ls -rd1 {{ imagemagick_dirname }}* | head -n 1"
+      register: dirname
+      args:
+        chdir: "{{ imagemagick_download_dest }}"
+
     - name: configure,build,install and check
       become: yes
       command: "{{ item }}"
       args:
-        chdir: "{{ imagemagick_download_dest }}/{{ imagemagick_dirname }}"
+        chdir: "{{ imagemagick_download_dest }}/{{ dirname.stdout }}"
       with_items:
         - ./configure
         - make
