@@ -18,7 +18,7 @@
       become: yes
       apt_repository:
         filename: imagemagick.list
-        repo: deb-src http://jp.archive.ubuntu.com/ubuntu/ xenial main restricted
+        repo: deb-src http://jp.archive.ubuntu.com/ubuntu/ bionic main restricted
         state: present
 
     - name: install dependencies packages
