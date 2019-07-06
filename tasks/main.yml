@@ -24,9 +24,8 @@
     - name: install dependencies packages
       become: yes
       apt:
-        pkg: "{{ item }}"
+        pkg: "{{ imagemagick_dependencies }}"
         update_cache: yes
-      with_items: "{{ imagemagick_dependencies }}"
 
     - name: Install the build dependencies
       become: yes
