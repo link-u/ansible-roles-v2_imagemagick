@@ -1,0 +1,58 @@
+---
+# tasks/main.yml (imagemagick)
+# Prefix : imagemagick
+
+- name: Remove apt package
+  become: yes
+  apt:
+    pkg: imagemagick
+    state: absent
+
+- name: Check imagemagick is installed
+  become: yes
+  stat:
+    path: "{{ imagemagick_install_dest }}/{{ imagemagick_command_name }}"
+  register: cmd
+
+- block:
+    - name: Add repository
+      become: yes
+      apt_repository:
+        filename: imagemagick.list
+        repo: "deb-src http://jp.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} main restricted"
+        state: present
+
+    - name: install dependencies packages
+      become: yes
+      apt:
+        pkg: "{{ imagemagick_dependencies }}"
+        update_cache: yes
+
+    - name: Install the build dependencies
+      become: yes
+      apt:
+        pkg: imagemagick
+        state: build-dep
+        update_cache: yes
+
+    - name: Download source code
+      become: yes
+      unarchive:
+        src: "{{ imagemagick_download_url }}"
+        dest: "{{ imagemagick_download_dest }}"
+        remote_src: true
+        creates: ImageMagick
+
+    - name: configure, build, install and check
+      become: yes
+      command: "{{ item }}"
+      args:
+        chdir: "{{ imagemagick_download_dest }}/{{ imagemagick_dirname }}"
+      with_items:
+        - "./configure"
+        - "make"
+        - "make install"
+        - "ldconfig {{ imagemagick_ldconfig_path }}"
+        # - make check
+
+  when: not cmd.stat.exists
