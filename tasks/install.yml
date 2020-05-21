@@ -21,6 +21,12 @@
         filename: imagemagick.list
         repo: "deb-src http://jp.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} main restricted"
         state: present
+        register: __imagemagick_add_apt_repo
+
+    - name: Update apt repository
+      apt:
+        update_cache: yes
+      when: __imagemagick_add_apt_repo.changed | bool
 
     - name: install dependencies packages
       become: yes
