@@ -1,56 +1,48 @@
-imagemagick
-===========
+# imagemagick
+
+## 概要
 
 imagemagickのインストールを行う  
 ソースコードからビルドするのでバージョンが上がっている場合は変数を書き換えること
 
 webpもインストールするので直接webpへの変換も可能
 
-Requirements
-------------
+## 動作確認バージョン
 
-* ubuntu 16.04
+- Ubuntu 18.04 (bionic)
+- ansible >= 2.8
+- Jinja2 2.10.3
 
-Role Variables
---------------
+## 使い方 (ansible)
+
+### Role variables
 
 ```yaml
-imagemagick_version: 7.0.4-2
-imagemagick_command_name: convert
+### インストール設定 ###############################################################################
+## 基本設定
+imagemagick_install_flag: True  # インストールフラグ
+imagemagick_version: 7.0.6-0
+imagemagick_command_name: "convert"
 imagemagick_dirname: "ImageMagick-{{ imagemagick_version }}"
-imagemagick_download_url: "https://www.imagemagick.org/download/{{ imagemagick_dirname }}.tar.gz"
+imagemagick_download_url: "https://github.com/ImageMagick/ImageMagick/archive/{{ imagemagick_version }}.tar.gz"
 imagemagick_dependencies:
-  - libpng-dev
-  - libjpeg-dev
-  - libtiff-dev
-  - libwebp-dev
+  - "libpng-dev"
+  - "libjpeg-dev"
+  - "libtiff-dev"
+  - "libwebp-dev"
 
-imagemagick_prefix: /usr/local
+imagemagick_prefix: "/usr/local"
 imagemagick_download_dest: "{{ imagemagick_prefix }}/src"
 imagemagick_install_dest: "{{ imagemagick_prefix }}/bin"
 imagemagick_ldconfig_path: "{{ imagemagick_prefix }}/lib"
 ```
 
-Dependencies
-------------
+### Example playbook
 
-None
-
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: imagemagick, tags: ["imagemagick"] }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-Link-U Inc.
+```yaml
+- hosts:
+    - servers
+  become: True
+  roles:
+    - { role: imagemagick, tags: ["imagemagick"] }
+```
