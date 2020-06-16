@@ -1,0 +1,9 @@
+---
+# handlers/main.yml (imagemagick)
+# Prefix : imagemagick
+
+- name: "Print warning for imagemagick (Check for deleted variables)"
+  debug:
+    msg: "{{ __imagemagick_check_deleted_vars.stdout_lines }}"
+  failed_when: yes
+  ignore_errors: yes
