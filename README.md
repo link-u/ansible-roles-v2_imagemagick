@@ -39,3 +39,16 @@ imagemagick_prefix: "/usr/local"
   roles:
     - { role: imagemagick, tags: ["imagemagick"] }
 ```
+
+## 後方互換性について
+
+### 削除された変数の一覧
+
+deb パッケージでのインストールに移行したため以下の変数は `group_vars` から削除して頂いて大丈夫です.
+
+* `imagemagick_command_name`
+* `imagemagick_dirname`
+* `imagemagick_dependencies`
+* `imagemagick_download_dest`
+* `imagemagick_install_dest`
+* `imagemagick_ldconfig_path`
