@@ -21,20 +21,13 @@ webpもインストールするので直接webpへの変換も可能
 ### インストール設定 ###############################################################################
 ## 基本設定
 imagemagick_install_flag: True  # インストールフラグ
-imagemagick_version: 7.0.6-0
-imagemagick_command_name: "convert"
-imagemagick_dirname: "ImageMagick-{{ imagemagick_version }}"
-imagemagick_download_url: "https://github.com/ImageMagick/ImageMagick/archive/{{ imagemagick_version }}.tar.gz"
-imagemagick_dependencies:
-  - "libpng-dev"
-  - "libjpeg-dev"
-  - "libtiff-dev"
-  - "libwebp-dev"
 
+## make install していた名残の変数.
+#  * deb に以降する際に make install したファイルを掃除するのに以下の変数は必要
+#  * 特に group_vars で修正するような項目はない
+imagemagick_version: 7.0.6-0
+imagemagick_download_url: "https://github.com/ImageMagick/ImageMagick/archive/{{ imagemagick_version }}.tar.gz"
 imagemagick_prefix: "/usr/local"
-imagemagick_download_dest: "{{ imagemagick_prefix }}/src"
-imagemagick_install_dest: "{{ imagemagick_prefix }}/bin"
-imagemagick_ldconfig_path: "{{ imagemagick_prefix }}/lib"
 ```
 
 ### Example playbook
@@ -46,3 +39,16 @@ imagemagick_ldconfig_path: "{{ imagemagick_prefix }}/lib"
   roles:
     - { role: imagemagick, tags: ["imagemagick"] }
 ```
+
+## 後方互換性について
+
+### 削除された変数の一覧
+
+deb パッケージでのインストールに移行したため以下の変数は `group_vars` から削除して頂いて大丈夫です.
+
+* `imagemagick_command_name`
+* `imagemagick_dirname`
+* `imagemagick_dependencies`
+* `imagemagick_download_dest`
+* `imagemagick_install_dest`
+* `imagemagick_ldconfig_path`

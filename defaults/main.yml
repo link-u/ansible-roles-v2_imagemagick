@@ -5,17 +5,10 @@
 ### インストール設定 ###############################################################################
 ## 基本設定
 imagemagick_install_flag: True  # インストールフラグ
-imagemagick_version: 7.0.6-0
-imagemagick_command_name: "convert"
-imagemagick_dirname: "ImageMagick-{{ imagemagick_version }}"
-imagemagick_download_url: "https://github.com/ImageMagick/ImageMagick/archive/{{ imagemagick_version }}.tar.gz"
-imagemagick_dependencies:
-  - "libpng-dev"
-  - "libjpeg-dev"
-  - "libtiff-dev"
-  - "libwebp-dev"
 
+## make install していた名残の変数.
+#  * deb に以降する際に make install したファイルを掃除するのに以下の変数は必要
+#  * 特に group_vars で修正するような項目はない
+imagemagick_version: 7.0.6-0
+imagemagick_download_url: "https://github.com/ImageMagick/ImageMagick/archive/{{ imagemagick_version }}.tar.gz"
 imagemagick_prefix: "/usr/local"
-imagemagick_download_dest: "{{ imagemagick_prefix }}/src"
-imagemagick_install_dest: "{{ imagemagick_prefix }}/bin"
-imagemagick_ldconfig_path: "{{ imagemagick_prefix }}/lib"

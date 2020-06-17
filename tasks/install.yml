@@ -2,63 +2,88 @@
 # tasks/main.yml (imagemagick)
 # Prefix : imagemagick
 
-- name: Remove apt package
-  become: yes
-  apt:
-    pkg: imagemagick
-    state: absent
-
 - name: Check imagemagick is installed
-  become: yes
   stat:
-    path: "{{ imagemagick_install_dest }}/{{ imagemagick_command_name }}"
-  register: cmd
+    path: "{{ webp_prefix }}/bin/magick"
+  register: __imagemagick_cmd
 
 - block:
-    - name: Add repository
-      become: yes
-      apt_repository:
-        filename: imagemagick.list
-        repo: "deb-src http://jp.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} main restricted"
-        state: present
-      register: __imagemagick_add_apt_repo
-
-    - name: Update apt repository
-      apt:
-        update_cache: yes
-      when: __imagemagick_add_apt_repo.changed | bool
-
-    - name: install dependencies packages
+    - name: install build packages
       become: yes
       apt:
-        pkg: "{{ imagemagick_dependencies }}"
+        name: "build-essential"
         update_cache: yes
 
-    - name: Install the build dependencies
-      become: yes
-      apt:
-        pkg: imagemagick
-        state: build-dep
-        update_cache: yes
+    - name: Clean up tmp directory for source code
+      file:
+        path: "/tmp/src_imagemagick"
+        state: absent
+
+    - name: Create tmp directory for source code
+      file:
+        path: "/tmp/src_imagemagick"
+        state: directory
 
     - name: Download source code
-      become: yes
       unarchive:
         src: "{{ imagemagick_download_url }}"
-        dest: "{{ imagemagick_download_dest }}"
+        dest: "/tmp/src_imagemagick"
         remote_src: true
-        creates: ImageMagick
 
-    - name: configure, build, install and check
-      become: yes
+    - name: configure and make uninstall
       command: "{{ item }}"
       args:
-        chdir: "{{ imagemagick_download_dest }}/{{ imagemagick_dirname }}"
-      with_items:
-        - "./configure"
-        - "make"
-        - "make install"
-        - "ldconfig {{ imagemagick_ldconfig_path }}"
-        # - make check
+        chdir: "/tmp/src_imagemagick/ImageMagick-{{ imagemagick_version }}"
+      loop:
+        - "./configure --prefix={{ imagemagick_prefix }}"
+        - "make uninstall"
 
-  when: not cmd.stat.exists
+    - name: Remove tmp directory for source code
+      file:
+        path: "/tmp/src_imagemagick"
+        state: absent
+  when:
+    - __imagemagick_cmd.stat.exists | bool
+    - (not __imagemagick_cmd.stat.islnk) | bool
+
+- name: Trust our package maintainers.
+  apt_key:
+    id: 4DE76DC836A27DBAE17FAC4B09C9B9C18F429AAE
+    url: https://pkg.link-u.co.jp/key.asc
+    state: present
+
+- name: Add our apt repository.
+  apt_repository:
+    repo: deb https://pkg.link-u.co.jp/{{ ansible_distribution_release }} ./
+    state: present
+
+- name: Install packages
+  apt:
+    name: "imagemagick"
+    state: latest
+    update_cache: yes
+
+- name: Create a symbolic link
+  file:
+    src: "/usr/bin/{{ item }}"
+    dest: "{{ webp_prefix }}/bin/{{ item }}"
+    owner: root
+    group: root
+    state: link
+  loop:
+    - "Magick++-config"
+    - "MagickCore-config"
+    - "MagickWand-config"
+    - "magick"
+    - "animate"
+    - "compare"
+    - "composite"
+    - "conjure"
+    - "convert"
+    - "display"
+    - "identify"
+    - "import"
+    - "magick-script"
+    - "mogrify"
+    - "montage"
+    - "stream"
