@@ -6,7 +6,7 @@
   shell: >-
     echo "[WARNING]: 以下の変数は削除されました. 以下の URL を確認してください. @y_hashida";
     echo "    https://github.com/link-u/ansible-roles-v2_imagemagick/blob/master/README.md#削除された変数の一覧";
-    
+
     {% if imagemagick_command_name is defined %}
       echo "imagemagick_command_name";
     {% endif %}
@@ -18,7 +18,7 @@
     {% if imagemagick_dependencies is defined %}
       echo "imagemagick_dependencies";
     {% endif %}
-    
+
     {% if imagemagick_download_dest is defined %}
       echo "imagemagick_download_dest";
     {% endif %}

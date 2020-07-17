@@ -60,7 +60,6 @@
 - name: Install packages
   apt:
     name: "imagemagick"
-    state: latest
     update_cache: yes
 
 - name: Create a symbolic link
