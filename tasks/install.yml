@@ -4,7 +4,7 @@
 
 - name: Check imagemagick is installed
   stat:
-    path: "{{ webp_prefix }}/bin/magick"
+    path: "{{ imagemagick_prefix }}/bin/magick"
   register: __imagemagick_cmd
 
 - block:
