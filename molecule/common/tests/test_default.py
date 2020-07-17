@@ -8,7 +8,7 @@ def test_installed_imagemagick(host):
     assert host.package("imagemagick").is_installed
 
 def test_created_symlink(host):
-    imagemagick_prefix = host.ansible.get_variables()["imagemagick_prefix"]
+    prefix = host.ansible.get_variables()["imagemagick_prefix"]
     commands = [
         "Magick++-config",
         "MagickCore-config",
@@ -29,7 +29,7 @@ def test_created_symlink(host):
     ]
 
     for com in commands:
-        symlink_com = imagemagick_prefix + "/bin/" + com
+        symlink_com = prefix + "/bin/" + com
         assert host.file(symlink_com).is_symlink
         linked_com = host.run("readlink " + symlink_com).stdout.splitlines()[0]
         assert linked_com == ("/usr/bin/" + com)
