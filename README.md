@@ -54,3 +54,6 @@ deb パッケージでのインストールに移行したため以下の変数�
 * `imagemagick_download_dest`
 * `imagemagick_install_dest`
 * `imagemagick_ldconfig_path`
+
+## License
+MIT
