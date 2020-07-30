@@ -4,7 +4,7 @@
 
 - name: Check imagemagick is installed
   stat:
-    path: "{{ webp_prefix }}/bin/magick"
+    path: "{{ imagemagick_prefix }}/bin/magick"
   register: __imagemagick_cmd
 
 - block:
@@ -46,6 +46,12 @@
     - __imagemagick_cmd.stat.exists | bool
     - (not __imagemagick_cmd.stat.islnk) | bool
 
+- name: Pre-install packages
+  apt:
+    name: "gpg"
+    state: present
+    update_cache: yes
+
 - name: Trust our package maintainers.
   apt_key:
     id: 4DE76DC836A27DBAE17FAC4B09C9B9C18F429AAE
@@ -60,13 +66,12 @@
 - name: Install packages
   apt:
     name: "imagemagick"
-    state: latest
     update_cache: yes
 
 - name: Create a symbolic link
   file:
     src: "/usr/bin/{{ item }}"
-    dest: "{{ webp_prefix }}/bin/{{ item }}"
+    dest: "{{ imagemagick_prefix }}/bin/{{ item }}"
     owner: root
     group: root
     state: link

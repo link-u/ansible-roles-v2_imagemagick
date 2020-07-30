@@ -1,5 +1,7 @@
 # imagemagick
 
+![ansible ci](https://github.com/link-u/ansible-roles-v2_imagemagick/workflows/ansible%20ci/badge.svg)
+
 ## 概要
 
 imagemagickのインストールを行う  
@@ -52,3 +54,6 @@ deb パッケージでのインストールに移行したため以下の変数�
 * `imagemagick_download_dest`
 * `imagemagick_install_dest`
 * `imagemagick_ldconfig_path`
+
+## License
+MIT
