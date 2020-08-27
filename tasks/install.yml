@@ -23,11 +23,17 @@
       file:
         path: "/tmp/src_imagemagick"
         state: directory
+        owner: "root"
+        group: "root"
+        mode: "0755"
 
     - name: Download source code
       unarchive:
         src: "{{ imagemagick_download_url }}"
         dest: "/tmp/src_imagemagick"
+        owner: "root"
+        group: "root"
+        mode: "0755"
         remote_src: true
 
     - name: configure and make uninstall
