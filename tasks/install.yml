@@ -7,7 +7,8 @@
     path: "{{ imagemagick_prefix }}/bin/magick"
   register: __imagemagick_cmd
 
-- block:
+- name: "Remove imagemagick installed from source"
+  block:
     - name: install build packages
       become: yes
       apt:
